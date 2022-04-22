@@ -26,7 +26,7 @@ const registerAndLogin = async () => {
 };
 
 
-describe('cyber-stocker routes', () => {
+describe('stock-bot routes', () => {
   beforeEach(() => {
     return setup(pool);
   });
@@ -135,25 +135,25 @@ describe('cyber-stocker routes', () => {
     });
   });
 
-  it.skip('unfollows all stocks for a given user FIX ME', async () => {
-    const [agent] = await registerAndLogin();
+  // it.skip('unfollows all stocks for a given user FIX ME', async () => {
+  //   const [agent] = await registerAndLogin();
 
-    const deleteStocks = await agent
-      .delete('/api/v1/users/1');
+  //   const deleteStocks = await agent
+  //     .delete('/api/v1/users/1');
 
-    // await agent.get('/api/v1/users/2');
+  //   // await agent.get('/api/v1/users/2');
 
-    // const resp = await agent.delete('/api/v1/users/2');
+  //   // const resp = await agent.delete('/api/v1/users/2');
     
-    // await agent.get('/api/v1/users/2');
+  //   // await agent.get('/api/v1/users/2');
 
-    console.log('|| deleteStocks >', deleteStocks.body);
+  //   console.log('|| deleteStocks >', deleteStocks.body);
 
-    expect(resp.body).toEqual(
-      expect.arrayContaining([])
-    );
-    // expect(res.body).toEqual(expect.objectContaining({}));
-  });
+  //   expect(resp.body).toEqual(
+  //     expect.arrayContaining([])
+  //   );
+  //   // expect(res.body).toEqual(expect.objectContaining({}));
+  // });
 
   it('unfollows a specific, named stock for a given user', async () => {
     const [agent] = await registerAndLogin();
@@ -247,7 +247,7 @@ describe('cyber-stocker routes', () => {
   it('should re-log in a user', async () => {
     const agent1 = request.agent(app);
 
-    const mockUserForUser = {
+    const mockUserForLogin = {
       username: 'Yon Yonson',
       phoneNumber: 911,
       password: 'BubbleHash',
@@ -257,7 +257,7 @@ describe('cyber-stocker routes', () => {
     //   .post('/api/v1/users')
     //   .send(mockUser)
     //   .redirects(1);
-    const agent = await agent1.post('/api/v1/users').send(mockUserForUser);
+    const agent = await agent1.post('/api/v1/users').send(mockUserForLogin);
     // add user log in as text
     expect(agent.body).toEqual(expect.any(String));
 
@@ -312,6 +312,17 @@ describe('cyber-stocker routes', () => {
     expect(res.body).toEqual(expected);
   });
 
+  it('gets a stock by id and tells us how many users are tracking it', async () => {
+    const [agent] = await registerAndLogin();
 
+    const res = await agent.get('/api/v1/stocks/trackers/1');
+
+    expect(res.body).toEqual({
+      stock_id: '1',
+      name: 'Microsoft',
+      ticker: 'MSFT',
+      users: { sum: '3' }
+    });
+  });
 
 });
